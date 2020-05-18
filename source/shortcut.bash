@@ -25,8 +25,13 @@ if [[ $1 == "" ]]
 then
     cat /home/$(whoami)/.bin/shortcut/ressources/ShortcutUsage
 else
+	if [ ! "$PS1" ] ;
+    then
+        echo -e "\e[31mThe script is not sourced right now please you the command like that : . shortcut [argument]\e[0m"
+        exit
+    fi
     while [[ $1 != "" ]]
-    do
+	do
 	case $1 in
 
 	    "-g" | "--goto")
@@ -49,23 +54,27 @@ else
 		fi
 		echo "$2:"$(pwd) >> /home/$(whoami)/.bin/shortcut/ressources/ShortcutList
 		shift
-		;;
+		return 1
+        ;;
 
 	    "-r" | "--remove")
 		remove_line "$2"
 		shift
-		;;
+		return 1
+        ;;
 
 	    "-l" | "--list")
 		cat /home/$(whoami)/.bin/shortcut/ressources/ShortcutList
-		;;
+		return 1
+        ;;
 
 	    "-h" | "--help")
 		cat /home/$(whoami)/.bin/shortcut/ressources/ShortcutUsage
-		;;
+		return 1
+        ;;
 
-	    \?)
-		echo -e "\e[31mInvalid option : -$1\e[0m"
+	    -*)
+		echo -e "\e[31mInvalid option : $1\e[0m"
 		return 0
 		;;
 
